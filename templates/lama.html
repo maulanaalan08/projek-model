@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Medis - Prediksi ICD-10</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #f4f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 500px;
+            box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            resize: none;
+            font-size: 14px;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f9fbff;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid #3498db;
+        }
+
+        .confidence {
+            font-size: 13px;
+        }
+
+        .high { color: green; }
+        .medium { color: orange; }
+        .low { color: red; }
+
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>AI Medis - Prediksi ICD-10</h2>
+
+    <form method="POST">
+        <textarea name="text" rows="4" placeholder="Masukkan keluhan pasien..."></textarea>
+        <button type="submit">Analisis</button>
+    </form>
+
+    {% if results %}
+    <div class="result">
+        <h3>Hasil Analisis</h3>
+
+        {% for r in results %}
+        <div class="card">
+            <b>{{ r.code }}</b><br>
+            {{ r.name }}<br>
+
+            {% set conf = r.confidence[:-1]|float %}
+
+            <div class="confidence">
+                Confidence:
+                {% if conf > 70 %}
+                    <span class="high">{{ r.confidence }}</span>
+                {% elif conf > 40 %}
+                    <span class="medium">{{ r.confidence }}</span>
+                {% else %}
+                    <span class="low">{{ r.confidence }}</span>
+                {% endif %}
+            </div>
+
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+
+</body>
+</html>

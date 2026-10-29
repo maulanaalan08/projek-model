@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>AI Medis - Prediksi ICD-10</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            background: #f4f7fb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 650px;
+            box-shadow: 0px 5px 20px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            resize: none;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        .result {
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f9fbff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            border-left: 5px solid #3498db;
+        }
+
+        .label {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .confidence {
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .high {
+            color: green;
+            font-weight: bold;
+        }
+
+        .medium {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .low {
+            color: red;
+            font-weight: bold;
+        }
+
+        .code {
+            font-size: 20px;
+            color: #3498db;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .section {
+            margin-top: 8px;
+        }
+
+        .entropy-low {
+            color: green;
+            font-weight: bold;
+        }
+
+        .entropy-medium {
+            color: orange;
+            font-weight: bold;
+        }
+
+        .entropy-high {
+            color: red;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h2>AI Medis - Prediksi ICD-10</h2>
+
+    <form method="POST">
+
+        <textarea
+            name="text"
+            rows="4"
+            placeholder="Masukkan keluhan pasien..."
+        ></textarea>
+
+        <button type="submit">
+            Analisis
+        </button>
+
+    </form>
+
+    {% if results %}
+
+    <div class="result">
+
+        <h3>Prediksi Kode ICD-10</h3>
+
+        {% for r in results %}
+
+        <div class="card">
+
+
+            <div class="code">
+                {{ r.code }}
+            </div>
+
+
+            <div class="section">
+                <span class="label">
+                    ICD-10 Description:
+                </span>
+                <br>
+                {{ r.icd10_desc_id }}
+            </div>
+
+            {% if r.definition and r.definition != "-" %}
+            <div class="section">
+                <span class="label">
+                    Definition:
+                </span>
+                <br>
+                {{ r.definition }}
+            </div>
+            {% endif %} 
+
+            {% set conf = r.confidence[:-1]|float %}
+
+            <div class="confidence">
+
+                <span class="label">
+                    Confidence:
+                </span>
+
+                {% if conf > 70 %}
+
+                    <span class="high">
+                        {{ r.confidence }}
+                    </span>
+
+                {% elif conf > 40 %}
+
+                    <span class="medium">
+                        {{ r.confidence }}
+                    </span>
+
+                {% else %}
+
+                    <span class="low">
+                        {{ r.confidence }}
+                    </span>
+
+                {% endif %}
+
+            </div>
+
+            <div class="section">
+
+                <span class="label">
+                    Entropy:
+                </span>
+
+                {{ r.entropy }}
+
+            </div>
+
+            
+
+        </div>
+
+        {% endfor %}
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+</body>
+
+</html>

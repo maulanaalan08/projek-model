@@ -1,0 +1,17 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+
+# Large model weights (GitHub 100MB limit)
+*.safetensors
+*.pth
+dataset_tokenized.pt
+**/dataset_tokenized.pt
